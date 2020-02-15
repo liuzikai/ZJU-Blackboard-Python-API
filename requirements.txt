@@ -1,0 +1,5 @@
+py_applescript==1.0.1
+html2text==2018.1.9
+termcolor==1.1.0
+pyquery==1.4.0
+requests==2.22.0

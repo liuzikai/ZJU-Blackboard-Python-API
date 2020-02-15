@@ -1,0 +1,8 @@
+.DS_Store
+.idea
+__pycache__
+data/
+logs/
+downloads/
+test-data/
+config.py

@@ -121,3 +121,7 @@ if alert["event"] == "assignment:available":
         assignment_content = ret["content"]
         for attachment in ret["attachments"]:
             s.download_file(attachment, DOWNLOAD_PATH)
+```
+
+## Miscellaneous
+* Both py program output debug message to STDERR.

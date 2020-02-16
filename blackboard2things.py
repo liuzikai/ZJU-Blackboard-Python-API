@@ -94,6 +94,9 @@ def handle_alert(s, alert):
         # Media
         elif alert["content_type"] == "media":
             things_note += "TYPE: media page. See original URL.\n"
+        # Forum Link
+        elif alert["content_type"] == "forum_link":
+            things_note += "TYPE: forum link. See original URL.\n"
         # Unknown
         elif alert["content_type"] == "unknown":
             things_title += " [unknown type]"

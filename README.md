@@ -74,6 +74,8 @@ For specific event types:
     * `"document"`: a document with content and possibly attachments. `alert["doc_url"]` can be used for `interpret_document()`.
     * `"blank"`: blank page (but actually may not). Please view the original page on BB.
     * `"media"`: media page. Please view the original page on BB.
+    * `"forum_link"`: formu link. Please view the original page on BB.
+    * `"video""`: BB video. Please view the original page on BB.
     * `"unknown`: unhandled content type.
 * For `alert["event"] == "announcement:available"`
   * (Possibly, or `None`) `alert["announcement"]`: content of announcement (text of unescaped HTML).

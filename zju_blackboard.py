@@ -162,6 +162,8 @@ class ZJUBlackboardSession:
                     alert["content_type"] = "media"
                 elif content_handler == "resource/x-bb-forumlink":
                     alert["content_type"] = "forum_link"
+                elif content_handle == "resource/x-bb-video":
+                    alert["content_type"] = "video"
                 else:
                     alert["content_type"] = "unknown"
                     alert["exception"] = "Unhandled content type '%s'" % content_handler

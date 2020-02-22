@@ -100,6 +100,11 @@ def handle_alert(s, alert):
         # Video
         elif alert["content_type"] == "video":
             things_note += "TYPE: video. See original URL.\n"
+        # External link
+        elif alert["content_type"] == "external_link":
+            things_note += "TYPE: external link. See original URL.\n"
+            # TODO: maybe the page can be automatically inspected as document
+            # data/20200218151412.json
         # Unknown
         elif alert["content_type"] == "unknown":
             things_title += " [unknown type]"

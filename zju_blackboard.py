@@ -164,6 +164,8 @@ class ZJUBlackboardSession:
                     alert["content_type"] = "forum_link"
                 elif content_handler == "resource/x-bb-video":
                     alert["content_type"] = "video"
+                elif content_handler == "resource/x-bb-externallink":
+                    alert["content_type"] = "external_link"
                 else:
                     alert["content_type"] = "unknown"
                     alert["exception"] = "Unhandled content type '%s'" % content_handler
@@ -369,14 +371,14 @@ class ZJUBlackboardSession:
 
         return ret
 
-    def interpret_assignment_page(self, inner_url):
+    def interpret_assignment_page(self, url):
         """
         Given an url of the type "resource/x-bb-assignment," look into it and extract necessary information.
-        :param inner_url: page url without the base url (c.zju.edu.cn)
+        :param url: page url with the base url (c.zju.edu.cn)
         :return: a dict containing some information (see process_assignment_page_raw)
         """
 
-        ret = self.s.get(url=self.base_url + inner_url)
+        ret = self.s.get(url)
 
         if ret.status_code != 200:
             return None

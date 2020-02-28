@@ -118,7 +118,7 @@ def handle_alert(s, alert):
     # Announcement available
     elif alert["event"] == "announcement:available":
         things_title += "announcement " + alert["title"]
-        if alert["announcement"]:
+        if alert.get("announcement"):
             things_note += alert["announcement"] + "\n"
     # Grade manual update
     elif alert["event"] == "grade:manual_update":

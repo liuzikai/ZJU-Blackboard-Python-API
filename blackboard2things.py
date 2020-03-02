@@ -66,9 +66,15 @@ def handle_alert(s, alert):
         # File
         if alert["content_type"] == "file":
             if not DISABLE_DOWNLOAD:
-                filename = s.download_file(alert["file_url"], DOWNLOAD_PATH)
-                eprint("  File %s downloaded" % filename, None)
-                things_note += 'FILE: ' + filename + " downloaded."
+                success, filename, size = s.download_file(alert["file_url"], DOWNLOAD_PATH, MAXIMAL_DOWNLOAD_SIZE)
+                if success:
+                    eprint("  %s downloaded" % filename, None)
+                    things_note = "[INFO] %s downloaded" % filename
+                else:
+                    eprint("  %s is not downloaded due to large size (%d MB)" % (filename, size / 2014 / 1024),
+                           None)
+                    things_note = "[INFO] %s is not downloaded due to large size (%d MB)" % (
+                        filename, size / 2014 / 1024)
         # Document
         elif alert["content_type"] == "document":
             things_note += "TYPE: document.\n"
@@ -83,11 +89,18 @@ def handle_alert(s, alert):
                 things_note += "TYPE: document. FAIL TO INTERPRET!\n"
                 should_dismiss = False
             else:
-                things_note += doc_data["text"] + "\n"
+                things_note += doc_data["text"]
                 if not DISABLE_DOWNLOAD:
                     for download_url in doc_data["attachments"]:
-                        filename = s.download_file(download_url, DOWNLOAD_PATH)
-                        eprint("  %s downloaded" % filename, None)
+                        success, filename, size = s.download_file(download_url, DOWNLOAD_PATH, MAXIMAL_DOWNLOAD_SIZE)
+                        if success:
+                            eprint("  %s downloaded" % filename, None)
+                            things_note += "\n[INFO] %s downloaded" % filename
+                        else:
+                            eprint("  %s is not downloaded due to large size (%d MB)" % (filename, size / 2014 / 1024),
+                                   None)
+                            things_note += "\n[INFO] %s is not downloaded due to large size (%d MB)" % (
+                                filename, size / 2014 / 1024)
         # Blank
         elif alert["content_type"] == "blank":
             things_note += "TYPE: blank page. See original URL.\n"
@@ -139,8 +152,15 @@ def handle_alert(s, alert):
             things_note += ret["content"]
             if not DISABLE_DOWNLOAD:
                 for attachment in ret["attachments"]:
-                    filename = s.download_file(attachment, DOWNLOAD_PATH)
-                    eprint("  %s downloaded" % filename, None)
+                    success, filename, size = s.download_file(attachment, DOWNLOAD_PATH, MAXIMAL_DOWNLOAD_SIZE)
+                    if success:
+                        eprint("  %s downloaded" % filename, None)
+                        things_note += "\n[INFO] %s downloaded" % filename
+                    else:
+                        eprint("  %s is not downloaded due to large size (%d MB)" % (filename, size / 2014 / 1024),
+                               None)
+                        things_note += "\n[INFO] %s is not downloaded due to large size (%d MB)" % (
+                            filename, size / 2014 / 1024)
     # Grade updated
     elif alert["event"] == "grade:update":
         things_title += "grade of " + alert["grade"] + " updated"

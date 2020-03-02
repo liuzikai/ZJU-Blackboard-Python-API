@@ -96,7 +96,7 @@ The alert will no longer shown on the website either.
 
 ### Download File
 ```py
-filename = s.download_file(alert["file_url"], DOWNLOAD_PATH)
+success, filename, size = s.download_file(alert["file_url"], DOWNLOAD_PATH, MAXIMAL_DOWNLOAD_SIZE)
 ```
 
 ### Interpret Document Page

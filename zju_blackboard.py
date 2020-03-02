@@ -252,20 +252,25 @@ class ZJUBlackboardSession:
 
         return ret
 
-    def download_file(self, inner_url, save_path):
+    def download_file(self, inner_url, save_path, cancel_if_larger_than=None) -> (bool, str, int):
         """
         Download a file given its url to the given location
         :param inner_url: file url without the base url (c.zju.edu.cn)
         :param save_path: the save path of the file, and the filename is automatically determined
-        :return: filename
+        :param cancel_if_larger_than: if not None, download will be canceled if file is larger then the given size [byte]
+        :return: (downloaded or not, filename, size in byte)
         """
 
-        # NOTICE the stream=True parameter
-        r = self.s.get(self.base_url + inner_url, stream=True)
-        r.encoding = "utf-8"
-
-        # print("urllib.request.unquote(r.url) =", urllib.request.unquote(r.url))
+        file_url = self.base_url + inner_url
+        r = self.s.head(file_url)
         local_filename = urllib.request.unquote(r.url).split('/')[-1]  # use r.url since the page may redirect
+        file_size = r.headers.get("content-length", 0)
+
+        if cancel_if_larger_than is not None and file_size > cancel_if_larger_than:
+            return False, local_filename, file_size
+
+        r = self.s.get(file_url, stream=True)  # NOTICE the stream=True parameter
+        r.encoding = "utf-8"
 
         if not os.path.exists(save_path):
             os.makedirs(save_path)
@@ -276,7 +281,7 @@ class ZJUBlackboardSession:
                     f.write(chunk)
                     f.flush()
 
-        return local_filename
+        return True, local_filename, file_size
 
     def process_document_entry(self, doc_obj, result):
         """

@@ -155,7 +155,7 @@ class ZJUBlackboardSession:
                     alert["file_url"] = entry["itemSpecificData"]["contentDetails"]["contentSpecificFileData"]
                 elif content_handler == "resource/x-bb-document":
                     alert["content_type"] = "document"
-                    alert["doc_url"] = entry["se_itemUri"]
+                    alert["doc_inner_url"] = entry["se_itemUri"]
                 elif content_handler == "resource/x-bb-blankpage":
                     alert["content_type"] = "blank"
                 elif content_handler == "resource/x-bb-mediasite":
@@ -188,6 +188,7 @@ class ZJUBlackboardSession:
                 alert["event"] = "assignment:due_available"
                 alert["assignment"] = html2text(
                     PyQuery(entry["se_context"]).find(".eventTitle").html(), bodywidth=0).replace("\n", "")
+                alert["assignment_inner_url"] = entry["se_itemUri"]
             # Assignment available
             elif event_type == "AS:AS_AVAIL":
                 alert["event"] = "assignment:available"
@@ -198,6 +199,12 @@ class ZJUBlackboardSession:
                 alert["event"] = "grade:update"
                 alert["grade"] = html2text(
                     PyQuery(entry["se_context"]).find(".eventTitle").html(), bodywidth=0).replace("\n", "")
+            # Test available
+            elif event_type == "TE:TE_AVAIL":
+                alert["event"] = "test:available"
+            # Test due time available
+            elif event_type == "TE:DUE":
+                alert["event"] = "test:due_available"
             # Unknown type
             else:
                 alert["event"] = "unknown"
@@ -271,6 +278,7 @@ class ZJUBlackboardSession:
 
         r = self.s.get(file_url, stream=True)  # NOTICE the stream=True parameter
         r.encoding = "utf-8"
+        local_filename = urllib.request.unquote(r.url).split('/')[-1]  # reload file name since head() may not redirect
 
         if not os.path.exists(save_path):
             os.makedirs(save_path)
@@ -376,14 +384,14 @@ class ZJUBlackboardSession:
 
         return ret
 
-    def interpret_assignment_page(self, url):
+    def interpret_assignment_page(self, inner_url):
         """
         Given an url of the type "resource/x-bb-assignment," look into it and extract necessary information.
-        :param url: page url with the base url (c.zju.edu.cn)
+        :param inner_url: page url without the base url (c.zju.edu.cn)
         :return: a dict containing some information (see process_assignment_page_raw)
         """
 
-        ret = self.s.get(url)
+        ret = self.s.get(self.base_url + inner_url)
 
         if ret.status_code != 200:
             return None

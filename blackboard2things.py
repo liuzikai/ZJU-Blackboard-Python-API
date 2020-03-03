@@ -81,11 +81,11 @@ def handle_alert(s, alert):
 
             eprint("  Further look into document", None)
 
-            doc_data = s.interpret_document(alert["doc_url"])
+            doc_data = s.interpret_document(alert["doc_inner_url"])
 
             if doc_data is None:
                 eprint("  Failed to interpret document", "red")
-                add_exception_to_things("Fail to interpret document %s" % alert["doc_url"])
+                add_exception_to_things("Fail to interpret document %s" % alert["doc_inner_url"])
                 things_note += "TYPE: document. FAIL TO INTERPRET!\n"
                 should_dismiss = False
             else:
@@ -142,7 +142,7 @@ def handle_alert(s, alert):
     # Assignment available
     elif alert["event"] == "assignment:available":
         things_title += "assignment " + alert["assignment"] + " available"
-        ret = s.interpret_assignment_page(alert["url"])
+        ret = s.interpret_assignment_page(alert["assignment_inner_url"])
         if ret is None:
             eprint("  Failed to interpret assignment page", "red")
             add_exception_to_things("Fail to interpret assignment page %s" % alert["url"])
@@ -168,6 +168,12 @@ def handle_alert(s, alert):
     elif alert["event"] == "course:available":
         things_title += "course " + alert["title"] + " available"
         things_note += "Course ID: " + alert["course_id"] + "\n"
+    # Test available
+    elif alert["event"] == "test:available":
+        things_title += "test " + alert["title"] + " available"
+    # Test due time available
+    elif alert["event"] == "test:due_available":
+        things_title += "test " + alert["title"] + " due time available"
     # Unknown
     elif alert["event"] == "unknown":
         things_title += " [unknown event] " + alert["title"]

@@ -188,12 +188,12 @@ class ZJUBlackboardSession:
                 alert["event"] = "assignment:due_available"
                 alert["assignment"] = html2text(
                     PyQuery(entry["se_context"]).find(".eventTitle").html(), bodywidth=0).replace("\n", "")
-                alert["assignment_inner_url"] = entry["se_itemUri"]
             # Assignment available
             elif event_type == "AS:AS_AVAIL":
                 alert["event"] = "assignment:available"
                 alert["assignment"] = html2text(
                     PyQuery(entry["se_context"]).find(".eventTitle").html(), bodywidth=0).replace("\n", "")
+                alert["assignment_inner_url"] = entry["se_itemUri"]
             # Grade updated
             elif event_type == "GB:GB_ATT_UPDATED":
                 alert["event"] = "grade:update"
@@ -379,7 +379,7 @@ class ZJUBlackboardSession:
             ret["content"] += html2text(entry.html())
             if entry.attr("id") == "instructions":
                 for link in entry.find("a"):
-                    if link.attrib["href"]:
+                    if link.attrib["href"] and link.attrib["href"].startswith("/"):
                         ret["attachments"].append(link.attrib["href"])
 
         return ret

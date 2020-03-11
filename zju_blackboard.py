@@ -269,14 +269,14 @@ class ZJUBlackboardSession:
         """
 
         file_url = self.base_url + inner_url
-        r = self.s.head(file_url)
+        r = self.s.head(file_url, allow_redirects=True)
         local_filename = urllib.request.unquote(r.url).split('/')[-1]  # use r.url since the page may redirect
-        file_size = r.headers.get("content-length", 0)
+        file_size = int(r.headers.get("content-length", 0))
 
         if cancel_if_larger_than is not None and file_size > cancel_if_larger_than:
             return False, local_filename, file_size
 
-        r = self.s.get(file_url, stream=True)  # NOTICE the stream=True parameter
+        r = self.s.get(file_url, stream=True, allow_redirects=True)  # NOTICE the stream=True parameter
         r.encoding = "utf-8"
         local_filename = urllib.request.unquote(r.url).split('/')[-1]  # reload file name since head() may not redirect
 
@@ -373,6 +373,8 @@ class ZJUBlackboardSession:
         doc = PyQuery(str(raw_text))
 
         content_entries = doc("#stepcontent1")("ol")("li")
+
+        # TODO: fetch due day. See uploadAssignment in test-data
 
         for html_entry in content_entries:
             entry = PyQuery(html_entry)

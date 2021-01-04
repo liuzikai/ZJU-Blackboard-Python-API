@@ -212,7 +212,7 @@ if __name__ == '__main__':
 
     # Login
     if not DISABLE_LOGIN:
-        if s.login(ENCODED_PW, ENCODED_PW_UNICODE, LOGIN_UID_UNICODE, LOGIN_PWD_UNICODE):
+        if not s.login(ENCODED_PW, ENCODED_PW_UNICODE, LOGIN_UID_UNICODE, LOGIN_PWD_UNICODE):
             print("Failed to log in")
             exit(1)
         else:

@@ -1,13 +1,13 @@
-# Unofficial Python API for ZJU Blackboard Alerts Automation
-
 Unofficial Python API for alerts (updates) in ZJU Blackboard (c.zju.edu.cn).
 
 ![](resources/2020-02-15-16-06-32.png)
 
+## Disclaimer
+
+This API is not official. Use at your own risk. [MIT License](LICENSE).
+
 This repo is consist of two parts: ZJU Blackboard API ([zju_blackboard.py](zju_blackboard.py)) and a full demo program of
 fetching alerts and convert them into Things (an macOS to-do app) entries ([blackboard2things.py](blackboard2things.py)).
-
-Notice that these APIs are unofficial. Use at your own risk.
 
 ## Demo blackboard2things.py
 
